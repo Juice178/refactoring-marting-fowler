@@ -5,21 +5,16 @@ import locale
 
 def statement(invoice, plays):
     total_amount = 0
-    volume_credits = 0
-    # print(invoice)
     result = f"Statement for {invoice['customer']}\n"
 
     for perf in invoice['performances']:
-        # play = play_for(perf)
-        # this_amount = amount_for(perf)
-
-        volume_credits += volume_credits_for(perf)
-
         result += f"  { play_for(perf)['name']}: {usd(total_amount)} seats)\n"
         total_amount += amount_for(perf)
 
+    # volume_credits = total_volume_credits()
+
     result += f"Amount owed is {usd(total_amount)}\n"
-    result += f"You earned {volume_credits} credits\n"
+    result += f"You earned {total_volume_credits()} credits\n"
     return result
 
 
@@ -44,7 +39,6 @@ def amount_for(a_performance):
 def play_for(a_performance):
     return plays[a_performance['playID']]
 
-
 def volume_credits_for(a_performance):
     result  = 0
     result += max(a_performance['audience'] - 30, 0)
@@ -56,6 +50,11 @@ def usd(a_number):
     locale.setlocale(locale.LC_ALL, 'en_US.utf-8')
     return locale.format_string('%.2f', a_number / 100, True)
 
+def total_volume_credits():
+    volume_credits = 0
+    for perf in invoice['performances']:
+        volume_credits += volume_credits_for(perf)
+    return volume_credits
 
 
 if __name__ == "__main__":
