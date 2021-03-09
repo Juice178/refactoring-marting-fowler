@@ -9,8 +9,6 @@ def statement(invoice, plays):
     # print(invoice)
     result = f"Statement for {invoice['customer']}\n"
 
-    locale.setlocale(locale.LC_ALL, 'en_US.utf-8')
-
     for perf in invoice['performances']:
         # play = play_for(perf)
         # this_amount = amount_for(perf)
@@ -19,10 +17,10 @@ def statement(invoice, plays):
 
         if "comedy" ==  play_for(perf)["type"]:
             volume_credits += math.floor(perf["audience"] / 5)
-        result += f"  { play_for(perf)['name']}: {locale.format_string('%.2f', amount_for(perf) / 100, True)} ({perf['audience']} seats)\n"
+        result += f"  { play_for(perf)['name']}: {usd(total_amount)} seats)\n"
         total_amount += amount_for(perf)
 
-    result += f"Amount owed is {locale.format_string('%.2f', total_amount / 100, True)}\n"
+    result += f"Amount owed is {usd(total_amount)}\n"
     result += f"You earned {volume_credits} credits\n"
     return result
 
@@ -55,6 +53,11 @@ def volume_credits_for(a_performance):
     if "comedy" == play_for(a_performance)['type']:
         result += math.floor(a_performance['audience']/ 5)
     return result
+
+def usd(a_number):
+    locale.setlocale(locale.LC_ALL, 'en_US.utf-8')
+    return locale.format_string('%.2f', a_number / 100, True)
+
 
 
 if __name__ == "__main__":
