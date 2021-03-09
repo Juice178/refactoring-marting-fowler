@@ -13,7 +13,7 @@ def statement(invoice, plays):
 
     for perf in invoice['performances']:
         # play = play_for(perf)
-        this_amount = amount_for(perf, play_for(perf))
+        this_amount = amount_for(perf)
 
         volume_credits += max(perf["audience"] - 30, 0)
 
@@ -27,20 +27,20 @@ def statement(invoice, plays):
     return result
 
 
-def amount_for(a_performance, play):
+def amount_for(a_performance):
     result = 0
-    if play['type'] == 'tragedy':
+    if play_for(a_performance)['type'] == 'tragedy':
         result = 40000
         if a_performance['audience'] > 30:
             result += 1000 * (a_performance["audience"] - 30)
     
-    elif play['type'] == 'comedy':
+    elif play_for(a_performance)['type'] == 'comedy':
         result = 30000
         if a_performance['audience'] > 20:
             result += 10000 + 500 * (a_performance["audience"] - 20)
         result += 300 * a_performance["audience"]
     else:
-        raise Exception(f"unkownn type: {play['type']}")
+        raise Exception(f"unkownn type: {play_for(a_performance)['type']}")
 
     return result
     
