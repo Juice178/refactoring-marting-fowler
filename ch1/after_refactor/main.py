@@ -4,16 +4,13 @@ import locale
 
 
 def statement(invoice, plays):
-    total_amount = 0
     result = f"Statement for {invoice['customer']}\n"
-
     for perf in invoice['performances']:
-        result += f"  { play_for(perf)['name']}: {usd(total_amount)} seats)\n"
-        total_amount += amount_for(perf)
+        result += f"  { play_for(perf)['name']}: {usd(amount_for(perf))} seats)\n"
 
-    # volume_credits = total_volume_credits()
+    # total_amount = apple_sauce()
 
-    result += f"Amount owed is {usd(total_amount)}\n"
+    result += f"Amount owed is {usd(total_amount())}\n"
     result += f"You earned {total_volume_credits()} credits\n"
     return result
 
@@ -51,10 +48,17 @@ def usd(a_number):
     return locale.format_string('%.2f', a_number / 100, True)
 
 def total_volume_credits():
-    volume_credits = 0
+    result = 0
     for perf in invoice['performances']:
-        volume_credits += volume_credits_for(perf)
-    return volume_credits
+        result += volume_credits_for(perf)
+    return result
+
+
+def total_amount():
+    result = 0
+    for perf in invoice['performances']:
+        result += amount_for(perf)
+    return result
 
 
 if __name__ == "__main__":
