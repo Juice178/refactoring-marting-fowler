@@ -15,8 +15,6 @@ def statement(invoice, plays):
 
         volume_credits += volume_credits_for(perf)
 
-        if "comedy" ==  play_for(perf)["type"]:
-            volume_credits += math.floor(perf["audience"] / 5)
         result += f"  { play_for(perf)['name']}: {usd(total_amount)} seats)\n"
         total_amount += amount_for(perf)
 
