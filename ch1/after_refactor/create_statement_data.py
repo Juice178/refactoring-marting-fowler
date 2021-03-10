@@ -61,3 +61,17 @@ def create_statement_data(invoice, plays):
 class PerformanceCalculator:
     performance: dict
     play: dict
+
+    def amount(self) -> int:
+        result = 0
+        if self.play['type'] == "tragedy":
+            result = 40000
+            if self.performance['audience'] > 30:
+                result += 1000 * (self.performance['audience'] - 30)
+        elif self.play['type'] == "comedy":
+            result = 30000
+            if self.performance['audience'] > 20:
+                result += 10000 + 500 * (self.performance['audience'] - 20)
+            result += 300 * self.performance['audience']
+        else:
+            raise Exception(f"unkownn type: {a_performance['type']}")
