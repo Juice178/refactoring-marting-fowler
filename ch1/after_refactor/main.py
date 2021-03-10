@@ -4,10 +4,17 @@ import locale
 
 
 def statement(invoice, plays):
-    statement_data = {}
-    return render_plain_text(statement_data, invoice, plays)
+    def enrich_performance(a_performance):
+        result = a_performance.copy()
+        return result
 
-def render_plain_text(data, invoice, plays):
+    statement_data = {}
+    statement_data['customer'] = invoice['customer']
+    statement_data['performances'] = list(map(enrich_performance, invoice['performances']))
+
+    return render_plain_text(statement_data, plays)
+
+def render_plain_text(data, plays):
     def total_amount():
         result = 0
         for perf in invoice['performances']:
@@ -52,8 +59,8 @@ def render_plain_text(data, invoice, plays):
         return result
 
 
-    result = f"Statement for {invoice['customer']}\n"
-    for perf in invoice['performances']:
+    result = f"Statement for {data['customer']}\n"
+    for perf in data['performances']:
         result += f"  { play_for(perf)['name']}: {usd(amount_for(perf))} ( {perf['audience']} seats)\n"
 
     # total_amount = apple_sauce()
