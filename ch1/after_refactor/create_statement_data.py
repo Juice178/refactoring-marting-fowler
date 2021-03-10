@@ -15,18 +15,8 @@ def create_statement_data(invoice, plays):
         result['volume_credits'] = calculator.volume_credits()
         return result
 
-    def volume_credits_for(a_performance):
-        result  = 0
-        result += max(a_performance['audience'] - 30, 0)
-        if "comedy" == a_performance['play']['type']:
-            result += math.floor(a_performance['audience']/ 5)
-        return result
-
     def play_for(a_performance):
         return plays[a_performance['playID']]
-
-    def amount_for(a_performance):
-        return PerformanceCalculator(a_performance, play_for(a_performance)).amount()
 
     def total_amount(data):
         return reduce(lambda x, y: x + y['amount'], data['performances'], 0)
