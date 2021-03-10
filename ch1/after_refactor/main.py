@@ -7,24 +7,11 @@ def statement(invoice, plays):
     def enrich_performance(a_performance):
         result = a_performance.copy()
         result['play'] = play_for(result)
+        result['amount'] = amount_for(result)
         return result
 
     def play_for(a_performance):
         return plays[a_performance['playID']]
-
-    statement_data = {}
-    statement_data['customer'] = invoice['customer']
-    statement_data['performances'] = list(map(enrich_performance, invoice['performances']))
-
-    return render_plain_text(statement_data, plays)
-
-def render_plain_text(data, plays):
-    # print(data)
-    def total_amount():
-        result = 0
-        for perf in data['performances']:
-            result += amount_for(perf)
-        return result
 
     def amount_for(a_performance):
         result = 0
@@ -41,6 +28,20 @@ def render_plain_text(data, plays):
         else:
             raise Exception(f"unkownn type: {a_performance['type']}")
 
+        return result
+
+    statement_data = {}
+    statement_data['customer'] = invoice['customer']
+    statement_data['performances'] = list(map(enrich_performance, invoice['performances']))
+
+    return render_plain_text(statement_data, plays)
+
+def render_plain_text(data, plays):
+    # print(data)
+    def total_amount():
+        result = 0
+        for perf in data['performances']:
+            result += perf['amount']
         return result
 
     def volume_credits_for(a_performance):
@@ -64,7 +65,7 @@ def render_plain_text(data, plays):
     result = f"Statement for {data['customer']}\n"
     # print(data)
     for perf in data['performances']:
-        result += f"  { perf['play']['name']}: {usd(amount_for(perf))} ( {perf['audience']} seats)\n"
+        result += f"  { perf['play']['name']}: {usd(perf['amount'])} ( {perf['audience']} seats)\n"
 
     # total_amount = apple_sauce()
 
