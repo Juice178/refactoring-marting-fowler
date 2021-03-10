@@ -11,7 +11,7 @@ def create_statement_data(invoice, plays):
         # print(calculator.performance, calculator.play)
         result = a_performance.copy()
         result['play'] = calculator.play
-        result['amount'] = amount_for(result)
+        result['amount'] = calculator.amount()
         result['volume_credits'] = volume_credits_for(result)
         return result
 
@@ -26,21 +26,7 @@ def create_statement_data(invoice, plays):
         return plays[a_performance['playID']]
 
     def amount_for(a_performance):
-        result = 0
-        if a_performance['play']['type'] == 'tragedy':
-            result = 40000
-            if a_performance['audience'] > 30:
-                result += 1000 * (a_performance["audience"] - 30)
-        
-        elif a_performance['play']['type'] == 'comedy':
-            result = 30000
-            if a_performance['audience'] > 20:
-                result += 10000 + 500 * (a_performance["audience"] - 20)
-            result += 300 * a_performance["audience"]
-        else:
-            raise Exception(f"unkownn type: {a_performance['type']}")
-
-        return result
+        return PerformanceCalculator(a_performance, play_for(a_performance)).amount()
 
     def total_amount(data):
         return reduce(lambda x, y: x + y['amount'], data['performances'], 0)
@@ -74,4 +60,5 @@ class PerformanceCalculator:
                 result += 10000 + 500 * (self.performance['audience'] - 20)
             result += 300 * self.performance['audience']
         else:
-            raise Exception(f"unkownn type: {a_performance['type']}")
+            raise Exception(f"unkownn type: {self.performance['type']}")
+        return result
