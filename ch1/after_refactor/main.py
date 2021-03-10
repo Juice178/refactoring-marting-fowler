@@ -1,6 +1,7 @@
 import json
 import math
 import locale
+from functools import reduce
 
 
 def statement(invoice, plays):
@@ -39,17 +40,10 @@ def statement(invoice, plays):
         return result
 
     def total_amount(data):
-        result = 0
-        for perf in data['performances']:
-            result += perf['amount']
-        return result
-
+        return reduce(lambda x, y: x + y['amount'], data['performances'], 0)
 
     def total_volume_credits(data):
-        result = 0
-        for perf in data['performances']:
-            result += perf['volume_credits']
-        return result
+        return reduce(lambda x, y: x + y['volume_credits'], data['performances'], 0)
 
     statement_data = {}
     statement_data['customer'] = invoice['customer']
