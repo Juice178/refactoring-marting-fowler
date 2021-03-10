@@ -12,7 +12,7 @@ def create_statement_data(invoice, plays):
         result = a_performance.copy()
         result['play'] = calculator.play
         result['amount'] = calculator.amount()
-        result['volume_credits'] = volume_credits_for(result)
+        result['volume_credits'] = calculator.volume_credits()
         return result
 
     def volume_credits_for(a_performance):
@@ -61,4 +61,11 @@ class PerformanceCalculator:
             result += 300 * self.performance['audience']
         else:
             raise Exception(f"unkownn type: {self.performance['type']}")
+        return result
+
+    def volume_credits(self) -> int:
+        result  = 0
+        result += max(self.performance['audience'] - 30, 0)
+        if "comedy" == self.play['type']:
+            result += math.floor(self.performance['audience']/ 5)
         return result
