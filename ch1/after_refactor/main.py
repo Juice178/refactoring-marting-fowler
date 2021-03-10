@@ -38,30 +38,31 @@ def statement(invoice, plays):
 
         return result
 
-    statement_data = {}
-    statement_data['customer'] = invoice['customer']
-    statement_data['performances'] = list(map(enrich_performance, invoice['performances']))
-
-    return render_plain_text(statement_data, plays)
-
-def render_plain_text(data, plays):
-    # print(data)
-    def total_amount():
+    def total_amount(data):
         result = 0
         for perf in data['performances']:
             result += perf['amount']
         return result
 
-    def usd(a_number):
-        locale.setlocale(locale.LC_ALL, 'en_US.utf-8')
-        return locale.currency(a_number / 100)
 
-    def total_volume_credits():
+    def total_volume_credits(data):
         result = 0
         for perf in data['performances']:
             result += perf['volume_credits']
         return result
 
+    statement_data = {}
+    statement_data['customer'] = invoice['customer']
+    statement_data['performances'] = list(map(enrich_performance, invoice['performances']))
+    statement_data['total_amount'] = total_amount(statement_data)
+    statement_data['total_volume_credits'] = total_volume_credits(statement_data)
+
+    return render_plain_text(statement_data, plays)
+
+def render_plain_text(data, plays):
+    def usd(a_number):
+        locale.setlocale(locale.LC_ALL, 'en_US.utf-8')
+        return locale.currency(a_number / 100)
 
     result = f"Statement for {data['customer']}\n"
     # print(data)
@@ -70,8 +71,8 @@ def render_plain_text(data, plays):
 
     # total_amount = apple_sauce()
 
-    result += f"Amount owed is {usd(total_amount())}\n"
-    result += f"You earned {total_volume_credits()} credits\n"
+    result += f"Amount owed is {usd(data['total_amount'])}\n"
+    result += f"You earned {data['total_volume_credits']} credits\n"
     return result
 
 
