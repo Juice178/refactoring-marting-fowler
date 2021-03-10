@@ -7,7 +7,7 @@ from dataclasses import dataclass
 
 def create_statement_data(invoice, plays):
     def enrich_performance(a_performance):
-        calculator = PerformanceCalculator(a_performance, play_for(a_performance))
+        calculator = create_performance_calculator(a_performance, play_for(a_performance))
         # print(calculator.performance, calculator.play)
         result = a_performance.copy()
         result['play'] = calculator.play
@@ -33,6 +33,15 @@ def create_statement_data(invoice, plays):
     return statement_data
 
 
+def create_performance_calculator(a_performance, a_play):
+    if a_play['type'] == "tragedy":
+        return TragedyCalculator(a_performance, a_play)
+    elif a_play['type'] == "comedy":
+        return ComedyCalculator(a_performance, a_play)
+    else:
+        raise Exception(f"unkownn play: {a_play['type']}")
+
+
 @dataclass
 class PerformanceCalculator:
     performance: dict
@@ -41,9 +50,7 @@ class PerformanceCalculator:
     def amount(self) -> int:
         result = 0
         if self.play['type'] == "tragedy":
-            result = 40000
-            if self.performance['audience'] > 30:
-                result += 1000 * (self.performance['audience'] - 30)
+            raise Exception("Unexpected call")
         elif self.play['type'] == "comedy":
             result = 30000
             if self.performance['audience'] > 20:
@@ -59,3 +66,15 @@ class PerformanceCalculator:
         if "comedy" == self.play['type']:
             result += math.floor(self.performance['audience']/ 5)
         return result
+
+
+class TragedyCalculator(PerformanceCalculator):
+    def amount(self) -> int:
+        result = 40000
+        if self.performance['audience'] > 30:
+            result += 1000 * (self.performance['audience'] - 30)
+        return result
+
+
+class ComedyCalculator(PerformanceCalculator):
+    pass
