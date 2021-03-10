@@ -4,9 +4,10 @@ import locale
 
 
 def statement(invoice, plays):
-    return render_plain_text(invoice, plays)
+    statement_data = {}
+    return render_plain_text(statement_data, invoice, plays)
 
-def render_plain_text(invoice, plays):
+def render_plain_text(data, invoice, plays):
     def total_amount():
         result = 0
         for perf in invoice['performances']:
@@ -42,7 +43,7 @@ def render_plain_text(invoice, plays):
 
     def usd(a_number):
         locale.setlocale(locale.LC_ALL, 'en_US.utf-8')
-        return locale.format_string('%.2f', a_number / 100, True)
+        return locale.currency(a_number / 100)
 
     def total_volume_credits():
         result = 0
@@ -53,7 +54,7 @@ def render_plain_text(invoice, plays):
 
     result = f"Statement for {invoice['customer']}\n"
     for perf in invoice['performances']:
-        result += f"  { play_for(perf)['name']}: {usd(amount_for(perf))} seats)\n"
+        result += f"  { play_for(perf)['name']}: {usd(amount_for(perf))} ( {perf['audience']} seats)\n"
 
     # total_amount = apple_sauce()
 
