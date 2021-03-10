@@ -4,7 +4,7 @@ import locale
 from functools import reduce
 
 
-def statement(invoice, plays):
+def create_statement_data(invoice, plays):
     def enrich_performance(a_performance):
         result = a_performance.copy()
         result['play'] = play_for(result)
@@ -51,9 +51,13 @@ def statement(invoice, plays):
     statement_data['total_amount'] = total_amount(statement_data)
     statement_data['total_volume_credits'] = total_volume_credits(statement_data)
 
-    return render_plain_text(statement_data, plays)
+    return statement_data
 
-def render_plain_text(data, plays):
+
+def statement(invoice, plays):
+    return render_plain_text(create_statement_data(invoice, plays))
+
+def render_plain_text(data):
     def usd(a_number):
         locale.setlocale(locale.LC_ALL, 'en_US.utf-8')
         return locale.currency(a_number / 100)
