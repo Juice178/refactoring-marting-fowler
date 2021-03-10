@@ -2,12 +2,15 @@ import json
 import math
 import locale
 from functools import reduce
+from dataclasses import dataclass
 
 
 def create_statement_data(invoice, plays):
     def enrich_performance(a_performance):
+        calculator = PerformanceCalculator(a_performance, play_for(a_performance))
+        # print(calculator.performance, calculator.play)
         result = a_performance.copy()
-        result['play'] = play_for(result)
+        result['play'] = calculator.play
         result['amount'] = amount_for(result)
         result['volume_credits'] = volume_credits_for(result)
         return result
@@ -52,3 +55,9 @@ def create_statement_data(invoice, plays):
     statement_data['total_volume_credits'] = total_volume_credits(statement_data)
 
     return statement_data
+
+
+@dataclass
+class PerformanceCalculator:
+    performance: dict
+    play: dict
