@@ -48,17 +48,7 @@ class PerformanceCalculator:
     play: dict
 
     def amount(self) -> int:
-        result = 0
-        if self.play['type'] == "tragedy":
-            raise Exception("Unexpected call")
-        elif self.play['type'] == "comedy":
-            result = 30000
-            if self.performance['audience'] > 20:
-                result += 10000 + 500 * (self.performance['audience'] - 20)
-            result += 300 * self.performance['audience']
-        else:
-            raise Exception(f"unkownn type: {self.performance['type']}")
-        return result
+        raise Exception("Subclass responsibility")
 
     def volume_credits(self) -> int:
         result  = 0
@@ -77,4 +67,9 @@ class TragedyCalculator(PerformanceCalculator):
 
 
 class ComedyCalculator(PerformanceCalculator):
-    pass
+    def amount(self) -> int:
+        result = 30000
+        if self.performance['audience'] > 20:
+            result += 10000 + 500 * (self.performance['audience'] - 20)
+        result += 300 * self.performance['audience']
+        return result
