@@ -4,6 +4,9 @@ import locale
 
 
 def statement(invoice, plays):
+    return render_plain_text(invoice, plays)
+
+def render_plain_text(invoice, plays):
     def total_amount():
         result = 0
         for perf in invoice['performances']:
@@ -57,6 +60,7 @@ def statement(invoice, plays):
     result += f"Amount owed is {usd(total_amount())}\n"
     result += f"You earned {total_volume_credits()} credits\n"
     return result
+
 
 if __name__ == "__main__":
     with open('invoices.json') as f:
