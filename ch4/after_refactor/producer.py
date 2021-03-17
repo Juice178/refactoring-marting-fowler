@@ -25,5 +25,5 @@ class Producer:
     def production(self, amountStr):
         amount = int(amountStr)
         newProduction = 0 if amount is None else amount
-        self._province['totalProduction'] += newProduction - self._production
+        self._province.totalProduction += newProduction - self._production
         self._production = newProduction
