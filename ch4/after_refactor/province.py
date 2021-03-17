@@ -60,8 +60,8 @@ class Province:
     def demandCost(self):
         remainingDemand = self.demand
         result = 0
-        self.prodcers = [p.cost for p in self.producers].sort()
-        for p in self.producers:
+        # self.prodcers = [p.cost for p in self.producers].sort()
+        for p in sorted(self.producers, key=lambda p: p.cost):
             constribution = min(remainingDemand, p.production)
             remainingDemand -= constribution
             result += constribution * p.cost
