@@ -38,7 +38,7 @@ class Province:
 
     @demand.setter
     def demand(self, arg):
-        self._demand = int(arg)
+        self._demand = int(arg) if arg != '' else None
 
     @property
     def price(self):
@@ -46,15 +46,21 @@ class Province:
 
     @price.setter
     def price(self, arg):
-        self._price = int(arg)
+        self._price = int(arg) if arg != '' else None
 
     @property
     def shortFall(self):
-        return self._demand - self.totalProduction
+        try:
+            return self._demand - self.totalProduction
+        except TypeError:
+            return None
 
     @property
     def profit(self):
-        return self.demandValue - self.demandCost
+        try:
+            return self.demandValue - self.demandCost
+        except TypeError:
+            return None
 
     @property
     def demandCost(self):
