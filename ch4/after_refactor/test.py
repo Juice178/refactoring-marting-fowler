@@ -7,12 +7,16 @@ import pytest
 def asia():
     return Province(sampleProvinceData())
 
+
 @pytest.mark.usefixtures('asia')
 class TestProvince:
     def test_shortfall(self, asia):
-        #asia = Province(sampleProvinceData())
         assert asia.shortFall == 5
 
-    def test_province(self, asia):
-        #asia = Province(sampleProvinceData())
+    def test_profit(self, asia):
         assert asia.profit == 230
+
+    def test_change_production(self, asia):
+        asia.producers[0].production = 20
+        assert asia.shortFall == -6
+        assert asia.profit == 292
